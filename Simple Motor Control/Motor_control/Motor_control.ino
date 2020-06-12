@@ -5,13 +5,13 @@
  *  
  */
 
- #include <servo.h>
+#include <Servo.h>
 
 // ESC control is the same PWM input as with a servo
  Servo ESC;
 
 // Potentiometer
- int potValue
+ int potValue;
 
 void setup() {
 
