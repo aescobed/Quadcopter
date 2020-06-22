@@ -508,12 +508,11 @@ download the executable.-->
 		<LABEL pos='182.00000,72.00000' direction='3' font='0' color='208000' style='0'>+</LABEL>
 		<LABEL pos='182.00000,78.00000' direction='3' font='0' color='208000' style='0'>-</LABEL>
 		<RECTANGLE a='168.00000,46.00000' b='246.00000,160.00000' style='3' fill='0'/>
-		<LABEL pos='178.00000,42.00000' direction='3' font='0' color='208000' style='0'>Receiver</LABEL>
 		<WIRE a='110.00000,20.00000' b='108.00000,18.00000'/>
 		<WIRE a='240.00000,18.00000' b='240.00000,54.00000'/>
 		<WIRE a='110.00000,118.00000' b='234.00000,120.00000'/>
 		<WIRE a='234.00000,120.00000' b='234.00000,54.00000'/>
-		<SYMBOL id='4' pos='48.00000,172.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+		<SYMBOL id='4' pos='48.00000,182.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='1' description='Ref' value='B?' show='0' pos='1.00000,-29.60000'/>
 			<FIELD type='0' description='Name' value='WALL_WART_5V_1A' show='1' pos='-25.00000,-20.00000'/>
 			<FIELD type='1' description='Package' value='' show='0' pos='1.00000,-27.20000'/>
@@ -534,9 +533,7 @@ download the executable.-->
 			<FIELD type='1' description='Mouser Part' value='..' show='0' pos='1.00000,8.80000'/>
 			<FIELD type='1' description='Cost' value='7.16' show='0' pos='1.00000,11.20000'/>
 		</SYMBOL>
-		<WIRE a='108.00000,18.00000' b='240.00000,18.00000'/>
 		<RECTANGLE a='60.00000,158.00000' b='90.00000,190.00000' style='5' fill='0'/>
-		<LABEL pos='64.00000,156.00000' direction='3' font='0' color='208000' style='0'>ESC</LABEL>
 		<SYMBOL id='5' pos='108.00000,184.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='1' description='Ref' value='M?' show='0' pos='1.00000,-7.60000'/>
 			<FIELD type='0' description='Name' value='MOTOR_3PHASE' show='1' pos='1.00000,-10.00000'/>
@@ -557,16 +554,27 @@ download the executable.-->
 			<FIELD type='1' description='Mouser Part' value='..' show='0' pos='1.00000,28.40000'/>
 			<FIELD type='1' description='Cost' value='..' show='0' pos='1.00000,30.80000'/>
 		</SYMBOL>
-		<LABEL pos='64.00000,166.00000' direction='3' font='0' color='208000' style='0'>signal</LABEL>
-		<LABEL pos='64.00000,172.00000' direction='3' font='0' color='208000' style='0'>+</LABEL>
+		<LABEL pos='78.00000,164.00000' direction='3' font='0' color='208000' style='0'>signal</LABEL>
+		<LABEL pos='64.00000,176.00000' direction='3' font='0' color='208000' style='0'>+</LABEL>
 		<LABEL pos='64.00000,180.00000' direction='3' font='0' color='208000' style='0'>-</LABEL>
-		<WIRE a='48.00000,168.00000' b='64.00000,174.00000'/>
-		<WIRE a='48.00000,171.00000' b='64.00000,180.00000'/>
+		<WIRE a='48.00000,178.00000' b='64.00000,176.00000'/>
+		<WIRE a='48.00000,181.00000' b='64.00000,180.00000'/>
 		<WIRE a='148.00000,166.00000' b='148.00000,52.00000'/>
 		<WIRE a='148.00000,52.00000' b='136.00000,52.00000'/>
-		<WIRE a='148.00000,166.00000' b='64.00000,166.00000'/>
+		<WIRE a='148.00000,166.00000' b='78.00000,164.00000'/>
 		<TEXT pos='8.00000,138.00000' direction='3' font='0' color='000000'>LI Battery</TEXT>
 		<LABEL pos='240.00000,54.00000' direction='3' font='0' color='208000' style='0'>+</LABEL>
 		<LABEL pos='234.00000,54.00000' direction='3' font='0' color='208000' style='0'>-</LABEL>
+		<LABEL pos='68.00000,164.00000' direction='3' font='0' color='208000' style='0'>+</LABEL>
+		<LABEL pos='72.00000,164.00000' direction='3' font='0' color='208000' style='0'>-</LABEL>
+		<TEXT pos='64.00000,156.00000' direction='3' font='0' color='000000'>ESC</TEXT>
+		<TEXT pos='174.00000,42.00000' direction='3' font='0' color='000000'>Receiver</TEXT>
+		<WIRE a='72.00000,164.00000' b='72.00000,118.00000'/>
+		<WIRE a='72.00000,118.00000' b='110.00000,118.00000'/>
+		<JUNCTION pos='110.00000,118.00000'/>
+		<WIRE a='68.00000,164.00000' b='68.00000,18.00000'/>
+		<WIRE a='108.00000,18.00000' b='240.00000,18.00000'/>
+		<JUNCTION pos='108.00000,18.00000'/>
+		<WIRE a='68.00000,18.00000' b='108.00000,18.00000'/>
 	</TinyCAD>
 </TinyCADSheets>
