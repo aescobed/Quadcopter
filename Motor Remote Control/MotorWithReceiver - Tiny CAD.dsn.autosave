@@ -316,6 +316,168 @@ download the executable.-->
 				<RECTANGLE a='79.00000,51.00000' b='80.00000,56.00000' style='5' fill='0'/>
 			</TinyCAD>
 		</SYMBOLDEF>
+		<SYMBOLDEF id='5'>
+			<NAME type='0'>MOTOR_3PHASE</NAME>
+			<REF type='1'>M?</REF>
+			<DESCRIPTION>Brushless DC motor</DESCRIPTION>
+			<PPP>1</PPP>
+			<GUID></GUID>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT></DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>V_Max</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>I_Max</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>R_Arm</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>L_Arm</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>V_BEMF</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>W_Max</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>T_Max</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Tau_Mech</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Tau_Elec</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Manufacturer</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Manufacturer Part</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Digi-Key Part</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Newark Part</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Mouser Part</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Cost</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='37.00000,32.00000'/>
+			<TinyCAD>
+				<TEXT pos='26.80000,26.60000' direction='3' font='0' color='000000'>M</TEXT>
+				<PIN pos='19.00000,22.00000' which='0' elec='4' direction='3' part='0' number='2' show='1' length='9' number_pos='0' centre_name='1'>A</PIN>
+				<PIN pos='19.00000,28.00000' which='0' elec='4' direction='3' part='0' number='3' show='1' length='10' number_pos='0' centre_name='1'>C</PIN>
+				<PIN pos='37.00000,25.00000' which='0' elec='4' direction='2' part='0' number='4' show='0' length='11' number_pos='0' centre_name='0'>B_RET</PIN>
+				<PIN pos='37.00000,28.00000' which='0' elec='4' direction='2' part='0' number='6' show='0' length='11' number_pos='0' centre_name='0'>C_RET</PIN>
+				<POLYGON pos='32.20000,25.00000' style='5' fill='0' polygon='0'>
+					<POINT pos='2.60000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='20.80000,22.00000' style='5' fill='0' polygon='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='2.60000,1.80000' arc='0'/>
+					<POINT pos='2.60000,2.00000' arc='0'/>
+				</POLYGON>
+				<PIN pos='37.00000,22.00000' which='0' elec='4' direction='2' part='0' number='5' show='0' length='11' number_pos='0' centre_name='1'>A_RET</PIN>
+				<POLYGON pos='32.20000,22.00000' style='5' fill='0' polygon='0'>
+					<POINT pos='2.60000,0.00000' arc='0'/>
+					<POINT pos='0.00000,2.00000' arc='0'/>
+				</POLYGON>
+				<PIN pos='19.00000,25.00000' which='0' elec='4' direction='3' part='0' number='1' show='1' length='10' number_pos='0' centre_name='1'>B</PIN>
+				<POLYGON pos='21.00000,26.00000' style='5' fill='0' polygon='0'>
+					<POINT pos='0.00000,2.00000' arc='0'/>
+					<POINT pos='2.60000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='32.00000,25.80000' style='5' fill='0' polygon='0'>
+					<POINT pos='2.80000,2.20000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='20.80000,25.00000' style='5' fill='0' polygon='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='2.40000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='27.00000,30.00000' style='5' fill='0' polygon='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<PIN pos='28.00000,32.00000' which='0' elec='0' direction='0' part='0' number='1' show='0' length='10' number_pos='0' centre_name='0'></PIN>
+				<ELLIPSE a='23.40000,29.40000' b='32.40000,20.40000' style='5' fill='0'/>
+				<RECTANGLE a='23.00000,23.00000' b='24.00000,27.00000' style='5' fill='1'/>
+				<RECTANGLE a='32.00000,23.00000' b='33.00000,27.00000' style='5' fill='1'/>
+			</TinyCAD>
+		</SYMBOLDEF>
 		<OPTIONS>
 			<GRID>0</GRID>
 			<UNITS>0</UNITS>
@@ -346,14 +508,13 @@ download the executable.-->
 		<LABEL pos='182.00000,72.00000' direction='3' font='0' color='208000' style='0'>+</LABEL>
 		<LABEL pos='182.00000,78.00000' direction='3' font='0' color='208000' style='0'>-</LABEL>
 		<RECTANGLE a='168.00000,46.00000' b='246.00000,160.00000' style='3' fill='0'/>
-		<LABEL pos='178.00000,42.00000' direction='3' font='0' color='208000' style='0'>Receiver</LABEL>
 		<WIRE a='110.00000,20.00000' b='108.00000,18.00000'/>
 		<WIRE a='240.00000,18.00000' b='240.00000,54.00000'/>
 		<WIRE a='110.00000,118.00000' b='234.00000,120.00000'/>
 		<WIRE a='234.00000,120.00000' b='234.00000,54.00000'/>
-		<SYMBOL id='4' pos='52.00000,80.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+		<SYMBOL id='4' pos='48.00000,182.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='1' description='Ref' value='B?' show='0' pos='1.00000,-29.60000'/>
-			<FIELD type='0' description='Name' value='WALL_WART_5V_1A' show='1' pos='1.00000,-32.00000'/>
+			<FIELD type='0' description='Name' value='WALL_WART_5V_1A' show='1' pos='-25.00000,-20.00000'/>
 			<FIELD type='1' description='Package' value='' show='0' pos='1.00000,-27.20000'/>
 			<FIELD type='1' description='Usage' value='..' show='0' pos='1.00000,-24.80000'/>
 			<FIELD type='1' description='Datasheet' value='..' show='0' pos='1.00000,-22.40000'/>
@@ -372,12 +533,48 @@ download the executable.-->
 			<FIELD type='1' description='Mouser Part' value='..' show='0' pos='1.00000,8.80000'/>
 			<FIELD type='1' description='Cost' value='7.16' show='0' pos='1.00000,11.20000'/>
 		</SYMBOL>
-		<WIRE a='52.00000,76.00000' b='52.00000,18.00000'/>
+		<RECTANGLE a='60.00000,158.00000' b='90.00000,190.00000' style='5' fill='0'/>
+		<SYMBOL id='5' pos='108.00000,184.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='M?' show='0' pos='1.00000,-7.60000'/>
+			<FIELD type='0' description='Name' value='MOTOR_3PHASE' show='1' pos='1.00000,-10.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='1.00000,-5.20000'/>
+			<FIELD type='1' description='V_Max' value='..' show='0' pos='1.00000,-2.80000'/>
+			<FIELD type='1' description='I_Max' value='..' show='0' pos='1.00000,-0.40000'/>
+			<FIELD type='1' description='R_Arm' value='..' show='0' pos='1.00000,2.00000'/>
+			<FIELD type='1' description='L_Arm' value='..' show='0' pos='1.00000,4.40000'/>
+			<FIELD type='1' description='V_BEMF' value='..' show='0' pos='1.00000,6.80000'/>
+			<FIELD type='1' description='W_Max' value='..' show='0' pos='1.00000,9.20000'/>
+			<FIELD type='1' description='T_Max' value='..' show='0' pos='1.00000,11.60000'/>
+			<FIELD type='1' description='Tau_Mech' value='..' show='0' pos='1.00000,14.00000'/>
+			<FIELD type='1' description='Tau_Elec' value='..' show='0' pos='1.00000,16.40000'/>
+			<FIELD type='1' description='Manufacturer' value='..' show='0' pos='1.00000,18.80000'/>
+			<FIELD type='1' description='Manufacturer Part' value='..' show='0' pos='1.00000,21.20000'/>
+			<FIELD type='1' description='Digi-Key Part' value='..' show='0' pos='1.00000,23.60000'/>
+			<FIELD type='1' description='Newark Part' value='..' show='0' pos='1.00000,26.00000'/>
+			<FIELD type='1' description='Mouser Part' value='..' show='0' pos='1.00000,28.40000'/>
+			<FIELD type='1' description='Cost' value='..' show='0' pos='1.00000,30.80000'/>
+		</SYMBOL>
+		<LABEL pos='78.00000,164.00000' direction='3' font='0' color='208000' style='0'>signal</LABEL>
+		<LABEL pos='64.00000,176.00000' direction='3' font='0' color='208000' style='0'>+</LABEL>
+		<LABEL pos='64.00000,180.00000' direction='3' font='0' color='208000' style='0'>-</LABEL>
+		<WIRE a='48.00000,178.00000' b='64.00000,176.00000'/>
+		<WIRE a='48.00000,181.00000' b='64.00000,180.00000'/>
+		<WIRE a='148.00000,166.00000' b='148.00000,52.00000'/>
+		<WIRE a='148.00000,52.00000' b='136.00000,52.00000'/>
+		<WIRE a='148.00000,166.00000' b='78.00000,164.00000'/>
+		<TEXT pos='8.00000,138.00000' direction='3' font='0' color='000000'>LI Battery</TEXT>
+		<LABEL pos='240.00000,54.00000' direction='3' font='0' color='208000' style='0'>+</LABEL>
+		<LABEL pos='234.00000,54.00000' direction='3' font='0' color='208000' style='0'>-</LABEL>
+		<LABEL pos='68.00000,164.00000' direction='3' font='0' color='208000' style='0'>+</LABEL>
+		<LABEL pos='72.00000,164.00000' direction='3' font='0' color='208000' style='0'>-</LABEL>
+		<TEXT pos='64.00000,156.00000' direction='3' font='0' color='000000'>ESC</TEXT>
+		<TEXT pos='174.00000,42.00000' direction='3' font='0' color='000000'>Receiver</TEXT>
+		<WIRE a='72.00000,164.00000' b='72.00000,118.00000'/>
+		<WIRE a='72.00000,118.00000' b='110.00000,118.00000'/>
+		<JUNCTION pos='110.00000,118.00000'/>
+		<WIRE a='68.00000,164.00000' b='68.00000,18.00000'/>
 		<WIRE a='108.00000,18.00000' b='240.00000,18.00000'/>
 		<JUNCTION pos='108.00000,18.00000'/>
-		<WIRE a='52.00000,18.00000' b='108.00000,18.00000'/>
-		<WIRE a='52.00000,79.00000' b='52.00000,118.00000'/>
-		<WIRE a='52.00000,118.00000' b='110.00000,118.00000'/>
-		<JUNCTION pos='110.00000,118.00000'/>
+		<WIRE a='68.00000,18.00000' b='108.00000,18.00000'/>
 	</TinyCAD>
 </TinyCADSheets>
