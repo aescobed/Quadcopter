@@ -39,7 +39,7 @@ void loop() {
   
   // Print the value of each channel
   Serial.print("Channel 3:");
-  //Serial.println(ch3);
+  Serial.println(ch3);
 
   //Delay printing
   delay(100); 
