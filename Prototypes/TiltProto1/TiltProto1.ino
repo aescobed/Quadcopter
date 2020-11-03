@@ -16,6 +16,10 @@
   
   int InputValue;
 
+  int throttleHigh;
+  int throttleLow;
+  int yawHigh;
+  int yawLow;
 
 void setup() {
 
@@ -23,8 +27,10 @@ void setup() {
   pinMode(7, INPUT);
   pinMode(6, INPUT);
 
-  // Set the data rate in bits/sec
+  // Set the data rate in bits/sec for the serial monitor
   Serial.begin(19200);
+
+  getRanges();
 
   // servo.attach(pin, min, max)
   //ESC.attach(9,1000,2000);
@@ -54,6 +60,60 @@ void loop() {
   //delay(500);
 
 }
+
+// Finds and sets the values ranges for each channel
+void getRanges()
+{
+    
+    int iter = 0;
+    
+    throttleHigh = 0;
+    throttleLow = 9999;
+    yawHigh = 0;
+    yawLow = 9999;
+
+    Serial.println("Setting channel boundaries...");
+
+    while(iter < 200){
+      throttle = pulseIn(7, HIGH, 250000);   
+      yaw = pulseIn(6, HIGH, 250000);    
+  
+
+      if(throttle > throttleHigh)
+        throttleHigh = throttle;
+
+      if(throttle < throttleLow)
+        throttleLow = throttle;
+
+      if(yaw > yawHigh)
+        yawHigh = yaw;
+
+      if(yaw < yawLow)
+        yawLow = yaw;
+  
+      iter++;
+      
+    }
+
+    Serial.print("throttle: ");
+    Serial.print("\t\t");
+    Serial.print(throttleLow);
+    Serial.print("-");
+    Serial.println(throttleHigh);
+
+    Serial.print("yaw: ");
+    Serial.print("\t\t");
+    Serial.print(yawLow);
+    Serial.print("-");
+    Serial.println(yawHigh);
+    
+    
+}
+
+
+
+
+
 
 
 /*
