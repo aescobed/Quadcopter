@@ -20,7 +20,9 @@
 
 
 class SPISettings {
+
 public:
+
     SPISettings(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) {
         if (__builtin_constant_p(clock)) {
             init_AlwaysInline(clock, bitOrder, dataMode);
@@ -114,10 +116,25 @@ private:
 
 
 class SimpleSPIClass {
+    
+    // Registers
+    const uint8_t ACCEL_OUT = 0x3B;
+    const uint8_t GYRO_OUT = 0x43;
+    const uint8_t TEMP_OUT = 0x41;
+
+    const uint8_t SPI_READ = 0x80;
+    const uint32_t LS_CLOCK = 1000000;  // 1 MHz
+    const uint32_t HS_CLOCK = 15000000; // 15 MHz
+    const uint8_t SSPin = 10;
+    
 
 public:
 	static void begin();
 
+
+    // Before using SPI.transfer() or asserting chip select pins,
+    // this function is used to gain exclusive access to the SPI bus
+    // and configure the correct settings.
     inline static void beginTransaction(SPISettings settings) {
         if (interruptMode > 0) {
             uint8_t sreg = SREG;
@@ -148,6 +165,39 @@ public:
         SPSR = settings.spsr;
     }
 
+
+
+    // After performing a group of transfers and releasing the chip select
+    // signal, this function allows others to access the SPI bus
+    inline static void endTransaction(void) {
+#ifdef SPI_TRANSACTION_MISMATCH_LED
+        if (!inTransactionFlag) {
+            pinMode(SPI_TRANSACTION_MISMATCH_LED, OUTPUT);
+            digitalWrite(SPI_TRANSACTION_MISMATCH_LED, HIGH);
+        }
+        inTransactionFlag = 0;
+#endif
+
+        if (interruptMode > 0) {
+#ifdef SPI_AVR_EIMSK
+            uint8_t sreg = SREG;
+#endif
+            noInterrupts();
+#ifdef SPI_AVR_EIMSK
+            if (interruptMode == 1) {
+                SPI_AVR_EIMSK = interruptSave;
+                SREG = sreg;
+            }
+            else
+#endif
+            {
+                SREG = interruptSave;
+            }
+        }
+    }
+
+
+
 	inline static void setBitOrder(uint8_t bitOrder) {
 		if (bitOrder == LSBFIRST) SPCR |= _BV(DORD);
 		else SPCR &= ~(_BV(DORD));
@@ -170,6 +220,81 @@ public:
 
 protected:
     int writeRegister(uint8_t subAddress, uint8_t data);
+    int readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest);
+    int readSensor();
+
+    enum GyroRange
+    {
+        GYRO_RANGE_250DPS,
+        GYRO_RANGE_500DPS,
+        GYRO_RANGE_1000DPS,
+        GYRO_RANGE_2000DPS
+    };
+    enum AccelRange
+    {
+        ACCEL_RANGE_2G,
+        ACCEL_RANGE_4G,
+        ACCEL_RANGE_8G,
+        ACCEL_RANGE_16G
+    };
+    enum DlpfBandwidth
+    {
+        DLPF_BANDWIDTH_184HZ,
+        DLPF_BANDWIDTH_92HZ,
+        DLPF_BANDWIDTH_41HZ,
+        DLPF_BANDWIDTH_20HZ,
+        DLPF_BANDWIDTH_10HZ,
+        DLPF_BANDWIDTH_5HZ
+    };
+
+    // buffer for sensor data
+    uint8_t buffer[21];
+
+    // data counts
+    int16_t _axcounts, _aycounts, _azcounts;
+    int16_t _gxcounts, _gycounts, _gzcounts;
+    int16_t _hxcounts, _hycounts, _hzcounts;
+    int16_t _tcounts;
+
+    // data buffer
+    float _ax, _ay, _az;
+    float _gx, _gy, _gz;
+    float _hx, _hy, _hz;
+    float _t;
+
+    // scale factors
+    float _accelScale;
+    float _gyroScale;
+    float _magScaleX, _magScaleY, _magScaleZ;
+    const float _tempScale = 333.87f;
+    const float _tempOffset = 21.0f;
+    // configuration
+    AccelRange _accelRange;
+    GyroRange _gyroRange;
+    DlpfBandwidth _bandwidth;
+    uint8_t _srd;
+    // gyro bias estimation
+    size_t _numSamples = 100;
+    double _gxbD, _gybD, _gzbD;
+    float _gxb, _gyb, _gzb;
+    // accel bias and scale factor estimation
+    double _axbD, _aybD, _azbD;
+    float _axmax, _aymax, _azmax;
+    float _axmin, _aymin, _azmin;
+    float _axb, _ayb, _azb;
+    float _axs = 1.0f;
+    float _ays = 1.0f;
+    float _azs = 1.0f;
+    float _hxb, _hyb, _hzb;
+    float _hxs = 1.0f;
+    float _hys = 1.0f;
+    float _hzs = 1.0f;
+    float _avgs;
+    // transformation matrix
+    /* transform the accel and gyro axes to match the magnetometer axes */
+    const int16_t tX[3] = { 0,  1,  0 };
+    const int16_t tY[3] = { 1,  0,  0 };
+    const int16_t tZ[3] = { 0,  0, -1 };
 	
 private: 
 	static uint8_t initialized;
