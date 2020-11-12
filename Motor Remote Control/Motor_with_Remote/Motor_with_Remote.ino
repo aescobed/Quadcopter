@@ -22,20 +22,20 @@ void setup() {
   Serial.begin(19200);
 
   // servo.attach(pin, min, max)
-  ESC.attach(9,1000,2000);
+  ESC.attach(4,1000,2000);
 
 }
 
 void loop() {
 
   // Read the pulse value of each channel
-  //ch3 = pulseIn(7, HIGH, 25000);    // 993 to 1986
+  ch3 = pulseIn(7, HIGH, 25000);    // 993 to 1986
 
   // map the value of the input channel 3 to the speed of the motor
-  // map(value, fromLow, fromHigh, toLow, toHigh)
-  //InputValue = map(ch3, 993, 1986, 0, 180);
+  //map(value, fromLow, fromHigh, toLow, toHigh)
+  InputValue = map(ch3, 993, 1986, 0, 180);
 
-  //ESC.write(InputValue);
+  ESC.write(InputValue);
   
   // Print the value of each channel
   Serial.print("Channel 3:");

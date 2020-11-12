@@ -71,6 +71,8 @@ int SimpleSPIClass::initialize()
 	// from "input" to SPI control.
 	// http://code.google.com/p/arduino/issues/detail?id=888
 	pinMode(SCK, OUTPUT);
+
+	// Might not need MOSI (digital 11)
 	pinMode(MOSI, OUTPUT);
 
 }
@@ -90,10 +92,21 @@ void SimpleSPIClass::begin()
 
 	initialized++; // reference count
 	SREG = sreg;
-	
+
+	setBitOrder(MSBFIRST);
+
 }
 
 
+int SimpleSPIClass::writeRegister(uint8_t subAddress, uint8_t data) {
+	/* write data to device */
+		beginTransaction(SPISettings(SPI_LS_CLOCK, MSBFIRST, SPI_MODE3)); // begin the transaction
+		digitalWrite(_csPin, LOW); // select the MPU9250 chip
+		transfer(subAddress); // write the register address
+		transfer(data); // write the data
+		digitalWrite(_csPin, HIGH); // deselect the MPU9250 chip
+		endTransaction(); // end the transaction
+	}
 
 
 
