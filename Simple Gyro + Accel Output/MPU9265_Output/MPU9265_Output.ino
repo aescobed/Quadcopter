@@ -32,7 +32,7 @@ void loop() {
   data = spi.transfer(0x43);
 
   Serial.print("ACCEL: ");
-  Serial.println(spi.readSensor());
+  Serial.println(spi.returnVar());
 
 
 }

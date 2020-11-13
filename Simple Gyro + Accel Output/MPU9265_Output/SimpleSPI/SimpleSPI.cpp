@@ -1,4 +1,5 @@
 #include "SimpleSPI.h"
+#include <math.h>
 
 
 /*
@@ -94,7 +95,11 @@ int SimpleSPIClass::begin()
 		return 0;
 	}
 
-	writeRegister(ACCEL_CONFIG, ACCEL_FS_SEL_8G);
+	// set accel scale (default = 16g)
+	//writeRegister(ACCEL_CONFIG, ACCEL_FS_SEL_8G);
+
+	// Set gravitational constant
+	setG();
 
 	return 1;
 
@@ -140,9 +145,9 @@ int SimpleSPIClass::readSensor() {
 	}
 
 	// combine into 16 bit values
-	_axcounts = (((int16_t)buffer[0]) << 8) | buffer[1];
-	_aycounts = (((int16_t)buffer[2]) << 8) | buffer[3];
-	_azcounts = (((int16_t)buffer[4]) << 8) | buffer[5];
+	_ax = (((int16_t)buffer[0]) << 8) | buffer[1];
+	_ay= (((int16_t)buffer[2]) << 8) | buffer[3];
+	_az= (((int16_t)buffer[4]) << 8) | buffer[5];
 	_tcounts = (((int16_t)buffer[6]) << 8) | buffer[7];
 	_gxcounts = (((int16_t)buffer[8]) << 8) | buffer[9];
 	_gycounts = (((int16_t)buffer[10]) << 8) | buffer[11];
@@ -150,22 +155,48 @@ int SimpleSPIClass::readSensor() {
 	_hxcounts = (((int16_t)buffer[15]) << 8) | buffer[14];
 	_hycounts = (((int16_t)buffer[17]) << 8) | buffer[16];
 	_hzcounts = (((int16_t)buffer[19]) << 8) | buffer[18];
+
 	// transform and convert to float values
-	_ax = (((float)(tX[0] * _axcounts + tX[1] * _aycounts + tX[2] * _azcounts) * _accelScale) - _axb) * _axs;
-	_ay = (((float)(tY[0] * _axcounts + tY[1] * _aycounts + tY[2] * _azcounts) * _accelScale) - _ayb) * _ays;
-	_az = (((float)(tZ[0] * _axcounts + tZ[1] * _aycounts + tZ[2] * _azcounts) * _accelScale) - _azb) * _azs;
-	_gx = ((float)(tX[0] * _gxcounts + tX[1] * _gycounts + tX[2] * _gzcounts) * _gyroScale) - _gxb;
-	_gy = ((float)(tY[0] * _gxcounts + tY[1] * _gycounts + tY[2] * _gzcounts) * _gyroScale) - _gyb;
-	_gz = ((float)(tZ[0] * _gxcounts + tZ[1] * _gycounts + tZ[2] * _gzcounts) * _gyroScale) - _gzb;
 	_hx = (((float)(_hxcounts)*_magScaleX) - _hxb) * _hxs;
 	_hy = (((float)(_hycounts)*_magScaleY) - _hyb) * _hys;
-
 	_hz = (((float)(_hzcounts)*_magScaleZ) - _hzb) * _hzs;
 	_t = ((((float)_tcounts) - _tempOffset) / _tempScale) + _tempOffset;
 
-	
+	return 0;
+}
 
-	return _axcounts;
+float SimpleSPIClass::returnVar()
+{
+
+	readSensor();
+	return _az / G;
+
+}
+
+void SimpleSPIClass::setG()
+{
+
+	int count = 0;
+	double magnitude = 0;
+
+	while (count < 500)
+	{
+		readSensor();
+
+		float x = (float)_ax;
+		float y = (float)_ay;
+		float z = (float)_az;
+
+		magnitude += sqrt(x * x + y * y + z * z);
+
+		count++;
+
+	}
+
+	magnitude /= count;
+
+	G = magnitude;
+
 }
 
 

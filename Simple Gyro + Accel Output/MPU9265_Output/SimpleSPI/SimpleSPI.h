@@ -145,6 +145,8 @@ class SimpleSPIClass {
 public:
 	int begin();
 
+    float returnVar();
+
 
     // Before using SPI.transfer() or asserting chip select pins,
     // this function is used to gain exclusive access to the SPI bus
@@ -239,6 +241,7 @@ public:
 protected:
     
     int whoAmI();
+    void setG();
 
    
     enum GyroRange
@@ -286,11 +289,10 @@ protected:
     float _magScaleX, _magScaleY, _magScaleZ;
     const float _tempScale = 333.87f;
     const float _tempOffset = 21.0f;
-    const float G = 9.807f;
+    float G;
 
     // configuration
-    AccelRange _accelRange;
-    GyroRange _gyroRange;
+
     DlpfBandwidth _bandwidth;
     uint8_t _srd;
     // gyro bias estimation
@@ -311,10 +313,6 @@ protected:
     float _hzs = 1.0f;
     float _avgs;
     // transformation matrix
-    /* transform the accel and gyro axes to match the magnetometer axes */
-    const int16_t tX[3] = { 0,  1,  0 };
-    const int16_t tY[3] = { 1,  0,  0 };
-    const int16_t tZ[3] = { 0,  0, -1 };
 
 
     
