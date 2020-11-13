@@ -43,7 +43,7 @@ int SimpleSPIClass::initialize()
 	// When the SS pin is set as OUTPUT, it can be used as
 	// a general purpose output port (it doesn't influence
 	// SPI operations).
-	pinMode(SS, OUTPUT);
+	pinMode(10, OUTPUT);
 
 	// Warning: if the SS pin ever becomes a LOW INPUT then SPI
 	// automatically switches to Slave, so the data direction of
@@ -66,7 +66,7 @@ int SimpleSPIClass::initialize()
 
 
 
-void SimpleSPIClass::begin()
+int SimpleSPIClass::begin()
 {
 
 	uint8_t sreg = SREG;
@@ -80,9 +80,23 @@ void SimpleSPIClass::begin()
 	initialized++; // reference count
 	SREG = sreg;
 
+	// reset the MPU9250
+	writeRegister(PWR_MGMNT_1, PWR_RESET);
+
+	// set accelerometer to low power mode
 	writeRegister(PWR_MGMNT_1, PWR_CYCLE);
 
-	setBitOrder(MSBFIRST);
+	// wait for MPU-9250 to come back up
+	delay(1);
+
+	// check the WHO AM I byte, expected value is 0x71 (decimal 113) or 0x73 (decimal 115)
+	if ((whoAmI() != 113) && (whoAmI() != 115)) {
+		return 0;
+	}
+
+	writeRegister(ACCEL_CONFIG, ACCEL_FS_SEL_8G);
+
+	return 1;
 
 }
 
@@ -148,7 +162,19 @@ int SimpleSPIClass::readSensor() {
 
 	_hz = (((float)(_hzcounts)*_magScaleZ) - _hzb) * _hzs;
 	_t = ((((float)_tcounts) - _tempOffset) / _tempScale) + _tempOffset;
-	return _ax;
+
+	
+
+	return _axcounts;
 }
 
 
+/* gets the MPU9250 WHO_AM_I register value, expected to be 0x71 */
+int SimpleSPIClass::whoAmI() {
+	// read the WHO AM I register
+	if (readRegisters(WHO_AM_I, 1, buffer) < 0) {
+		return -1;
+	}
+	// return the register value
+	return buffer[0];
+}

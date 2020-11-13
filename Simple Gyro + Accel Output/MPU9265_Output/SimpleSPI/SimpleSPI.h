@@ -122,9 +122,17 @@ class SimpleSPIClass {
     const uint8_t GYRO_OUT = 0x43;
     const uint8_t TEMP_OUT = 0x41;
     static const uint8_t PWR_MGMNT_1 = 0x6B;
+    static const uint8_t WHO_AM_I = 0x75;
+    const uint8_t ACCEL_CONFIG = 0x1C;
 
     // Accelerometer on low power mode
     static const uint8_t PWR_CYCLE = 0x20;
+
+    // Reset MPU 9250
+    const uint8_t PWR_RESET = 0x80;
+
+    //Accelerometer scale
+    const uint8_t ACCEL_FS_SEL_8G = 0x10;
 
     const uint8_t SPI_READ = 0x80;
     const uint32_t LS_CLOCK = 1000000;  // 1 MHz
@@ -135,7 +143,7 @@ class SimpleSPIClass {
     
 
 public:
-	void begin();
+	int begin();
 
 
     // Before using SPI.transfer() or asserting chip select pins,
@@ -230,7 +238,7 @@ public:
 
 protected:
     
-    
+    int whoAmI();
 
    
     enum GyroRange

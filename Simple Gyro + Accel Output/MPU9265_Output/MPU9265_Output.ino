@@ -9,7 +9,14 @@ void setup() {
 
 
   
-  spi.begin();
+  if(spi.begin())
+    Serial.println("MPU9250 set");
+
+  // If initialization fails
+  else
+    while(true)
+      Serial.println("Initialization failed");
+      
 
   
 
