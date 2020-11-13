@@ -149,7 +149,7 @@ int SimpleSPIClass::readSensor() {
 	_ay= (((int16_t)buffer[2]) << 8) | buffer[3];
 	_az= (((int16_t)buffer[4]) << 8) | buffer[5];
 	_tcounts = (((int16_t)buffer[6]) << 8) | buffer[7];
-	_gxcounts = (((int16_t)buffer[8]) << 8) | buffer[9];
+	_gx = (((int16_t)buffer[8]) << 8) | buffer[9];
 	_gycounts = (((int16_t)buffer[10]) << 8) | buffer[11];
 	_gzcounts = (((int16_t)buffer[12]) << 8) | buffer[13];
 	_hxcounts = (((int16_t)buffer[15]) << 8) | buffer[14];
@@ -169,7 +169,8 @@ float SimpleSPIClass::returnVar()
 {
 
 	readSensor();
-	return _az / G;
+	xAng += _gx / 1000;
+	return (float) xAng;
 
 }
 

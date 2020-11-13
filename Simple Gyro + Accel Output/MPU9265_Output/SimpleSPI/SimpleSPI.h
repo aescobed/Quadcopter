@@ -278,8 +278,8 @@ protected:
     int16_t _tcounts;
 
     // data buffer
-    float _ax, _ay, _az;
-    float _gx, _gy, _gz;
+    int16_t _ax, _ay, _az;
+    int16_t _gx, _gy, _gz;
     float _hx, _hy, _hz;
     float _t;
 
@@ -296,23 +296,16 @@ protected:
     DlpfBandwidth _bandwidth;
     uint8_t _srd;
     // gyro bias estimation
-    size_t _numSamples = 100;
-    double _gxbD, _gybD, _gzbD;
-    float _gxb, _gyb, _gzb;
-    // accel bias and scale factor estimation
-    double _axbD, _aybD, _azbD;
-    float _axmax, _aymax, _azmax;
-    float _axmin, _aymin, _azmin;
+
+    // raw values from sensor
     float _axb, _ayb, _azb;
-    float _axs = 1.0f;
-    float _ays = 1.0f;
-    float _azs = 1.0f;
     float _hxb, _hyb, _hzb;
     float _hxs = 1.0f;
     float _hys = 1.0f;
     float _hzs = 1.0f;
     float _avgs;
-    // transformation matrix
+
+    double xAng = 0;
 
 
     
