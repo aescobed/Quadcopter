@@ -121,21 +121,28 @@ class SimpleSPIClass {
     const uint8_t ACCEL_OUT = 0x3B;
     const uint8_t GYRO_OUT = 0x43;
     const uint8_t TEMP_OUT = 0x41;
+    static const uint8_t PWR_MGMNT_1 = 0x6B;
+
+    // Accelerometer on low power mode
+    static const uint8_t PWR_CYCLE = 0x20;
 
     const uint8_t SPI_READ = 0x80;
     const uint32_t LS_CLOCK = 1000000;  // 1 MHz
     const uint32_t HS_CLOCK = 15000000; // 15 MHz
     const uint8_t SSPin = 10;
+
+    const float _accelScale = G * 2.0f / 32767.5f; // Set to 16G
     
 
 public:
-	static void begin();
+	void begin();
 
 
     // Before using SPI.transfer() or asserting chip select pins,
     // this function is used to gain exclusive access to the SPI bus
     // and configure the correct settings.
     inline static void beginTransaction(SPISettings settings) {
+
         if (interruptMode > 0) {
             uint8_t sreg = SREG;
             noInterrupts();
@@ -217,12 +224,15 @@ public:
         return SPDR;
     }
 
-
-protected:
     int writeRegister(uint8_t subAddress, uint8_t data);
     int readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest);
     int readSensor();
 
+protected:
+    
+    
+
+   
     enum GyroRange
     {
         GYRO_RANGE_250DPS,
@@ -263,11 +273,13 @@ protected:
     float _t;
 
     // scale factors
-    float _accelScale;
+    
     float _gyroScale;
     float _magScaleX, _magScaleY, _magScaleZ;
     const float _tempScale = 333.87f;
     const float _tempOffset = 21.0f;
+    const float G = 9.807f;
+
     // configuration
     AccelRange _accelRange;
     GyroRange _gyroRange;
@@ -295,6 +307,10 @@ protected:
     const int16_t tX[3] = { 0,  1,  0 };
     const int16_t tY[3] = { 1,  0,  0 };
     const int16_t tZ[3] = { 0,  0, -1 };
+
+
+    
+
 	
 private: 
 	static uint8_t initialized;

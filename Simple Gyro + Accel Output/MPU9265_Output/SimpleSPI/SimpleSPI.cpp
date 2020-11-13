@@ -15,29 +15,16 @@
  *
  *
  *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
 */
 
 
 
 SimpleSPIClass spi;
 uint8_t SimpleSPIClass::initialized = 0;
+uint8_t SimpleSPIClass::interruptMode = 0;
+uint8_t SimpleSPIClass::interruptMask = 0;
+uint8_t SimpleSPIClass::interruptSave = 0;
+
 
 
 int SimpleSPIClass::initialize()
@@ -93,6 +80,8 @@ void SimpleSPIClass::begin()
 	initialized++; // reference count
 	SREG = sreg;
 
+	writeRegister(PWR_MGMNT_1, PWR_CYCLE);
+
 	setBitOrder(MSBFIRST);
 
 }
@@ -110,6 +99,8 @@ int SimpleSPIClass::writeRegister(uint8_t subAddress, uint8_t data) {
 
 
 int SimpleSPIClass::readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest) {
+
+		interruptMode = 0;
 
 		// begin the transaction
 		beginTransaction(SPISettings(HS_CLOCK, MSBFIRST, SPI_MODE3));
@@ -157,7 +148,7 @@ int SimpleSPIClass::readSensor() {
 
 	_hz = (((float)(_hzcounts)*_magScaleZ) - _hzb) * _hzs;
 	_t = ((((float)_tcounts) - _tempOffset) / _tempScale) + _tempOffset;
-	return 1;
+	return _ax;
 }
 
 
