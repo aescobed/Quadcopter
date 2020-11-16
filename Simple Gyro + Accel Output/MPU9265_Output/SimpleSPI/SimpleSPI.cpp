@@ -101,6 +101,11 @@ int SimpleSPIClass::begin()
 	// Set gravitational constant
 	setG();
 
+	// Set sample rate in Hz - important for gyro - magnetometer will be 100Hz for any sample rate at or above 100Hz
+	setSampleRate(sampleRate);
+
+	setGyroDrift();
+
 	return 1;
 
 }
@@ -150,8 +155,8 @@ int SimpleSPIClass::readSensor() {
 	_az= (((int16_t)buffer[4]) << 8) | buffer[5];
 	_tcounts = (((int16_t)buffer[6]) << 8) | buffer[7];
 	_gx = (((int16_t)buffer[8]) << 8) | buffer[9];
-	_gycounts = (((int16_t)buffer[10]) << 8) | buffer[11];
-	_gzcounts = (((int16_t)buffer[12]) << 8) | buffer[13];
+	_gy = (((int16_t)buffer[10]) << 8) | buffer[11];
+	_gz = (((int16_t)buffer[12]) << 8) | buffer[13];
 	_hxcounts = (((int16_t)buffer[15]) << 8) | buffer[14];
 	_hycounts = (((int16_t)buffer[17]) << 8) | buffer[16];
 	_hzcounts = (((int16_t)buffer[19]) << 8) | buffer[18];
@@ -165,11 +170,18 @@ int SimpleSPIClass::readSensor() {
 	return 0;
 }
 
+// Maybe should change the gyro sample rate
+// Should get the drift and adjust the angle by that every time we update it or every couple of times we update it
+// Set gyro offset
+
+// Set gyro offset every now and then (after noticeable difference)
+// based on the average gravity and magnetic 
+// field felt by the sensor over the previous period of time
 float SimpleSPIClass::returnVar()
 {
 
 	readSensor();
-	xAng += _gx / 1000;
+	xAng += ((float)_gx / 500) - xAngDrift;
 	return (float) xAng;
 
 }
@@ -197,6 +209,48 @@ void SimpleSPIClass::setG()
 	magnitude /= count;
 
 	G = magnitude;
+
+}
+
+void SimpleSPIClass::setSampleRate(int sampleRate)
+{
+	// For resetting magnetometer
+	writeRegister(SMPDIV, 19);
+
+	// Get sample rate divider
+	uint8_t sampleRtDiv = (1000 - sampleRate) - 1;
+
+	// Set sample rate divider
+	writeRegister(SMPDIV, sampleRtDiv);
+}
+
+void SimpleSPIClass::setGyroDrift()
+{
+
+	int count = 0;
+
+	int interval = 1000;
+
+	float avgXAngDrift = 0;
+	float avgYAngDrift = 0;
+	float avgZAngDrift = 0;
+
+	while (count < interval)
+	{
+
+		readSensor();
+
+		avgXAngDrift += (float)_gx / sampleRate;
+		avgYAngDrift += (float)_gx / sampleRate;
+		avgZAngDrift += (float)_gx / sampleRate;
+
+		count++;
+
+	}
+
+	xAngDrift = avgXAngDrift / interval;
+	yAngDrift = avgXAngDrift / interval;
+	zAngDrift = avgXAngDrift / interval;
 
 }
 

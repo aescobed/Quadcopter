@@ -18,10 +18,6 @@ void setup() {
       Serial.println("Initialization failed");
       
 
-  
-
-  
-
 
 }
 

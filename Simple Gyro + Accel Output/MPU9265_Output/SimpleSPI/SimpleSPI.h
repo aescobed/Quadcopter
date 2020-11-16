@@ -121,9 +121,10 @@ class SimpleSPIClass {
     const uint8_t ACCEL_OUT = 0x3B;
     const uint8_t GYRO_OUT = 0x43;
     const uint8_t TEMP_OUT = 0x41;
-    static const uint8_t PWR_MGMNT_1 = 0x6B;
-    static const uint8_t WHO_AM_I = 0x75;
+    const uint8_t PWR_MGMNT_1 = 0x6B;
+    const uint8_t WHO_AM_I = 0x75;
     const uint8_t ACCEL_CONFIG = 0x1C;
+    const uint8_t SMPDIV = 0x19;
 
     // Accelerometer on low power mode
     static const uint8_t PWR_CYCLE = 0x20;
@@ -131,7 +132,7 @@ class SimpleSPIClass {
     // Reset MPU 9250
     const uint8_t PWR_RESET = 0x80;
 
-    //Accelerometer scale
+    // Accelerometer scale
     const uint8_t ACCEL_FS_SEL_8G = 0x10;
 
     const uint8_t SPI_READ = 0x80;
@@ -141,6 +142,14 @@ class SimpleSPIClass {
 
     const float _accelScale = G * 2.0f / 32767.5f; // Set to 16G
     
+    // Sample rate in Hz
+    int sampleRate = 1000;
+
+    float xAngDrift;
+    float yAngDrift;
+    float zAngDrift;
+
+
 
 public:
 	int begin();
@@ -242,6 +251,8 @@ protected:
     
     int whoAmI();
     void setG();
+    void setSampleRate(int sampleRate);
+    void setGyroDrift();
 
    
     enum GyroRange
@@ -272,8 +283,6 @@ protected:
     uint8_t buffer[21];
 
     // data counts
-    int16_t _axcounts, _aycounts, _azcounts;
-    int16_t _gxcounts, _gycounts, _gzcounts;
     int16_t _hxcounts, _hycounts, _hzcounts;
     int16_t _tcounts;
 
