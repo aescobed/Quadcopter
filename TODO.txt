@@ -1,0 +1,7 @@
+Set gyro offset registers
+
+Get magnetometer to work (set proper power mode)? - ak8963 Register
+
+Get gravity unit vector
+
+get magnetometer unit vector

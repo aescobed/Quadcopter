@@ -81,19 +81,32 @@ int SimpleSPIClass::begin()
 	initialized++; // reference count
 	SREG = sreg;
 
-	// reset the MPU9250
-	writeRegister(PWR_MGMNT_1, PWR_RESET);
-
-	// set accelerometer to low power mode
-	writeRegister(PWR_MGMNT_1, PWR_CYCLE);
-
-	// wait for MPU-9250 to come back up
-	delay(1);
-
 	// check the WHO AM I byte, expected value is 0x71 (decimal 113) or 0x73 (decimal 115)
 	if ((whoAmI() != 113) && (whoAmI() != 115)) {
 		return 0;
 	}
+
+	// reset the MPU9250
+	writeRegister(PWR_MGMNT_1, PWR_RESET);
+
+	// wait for MPU-9250 to come back up
+	delay(5);
+
+	// set accelerometer to low power mode
+	//writeRegister(PWR_MGMNT_1, 0x09);
+
+	// set AK8963 to Power Down
+	if (writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN) < 0) {
+		return -2;
+	}
+	delay(100); // long wait between AK8963 mode changes  
+	// set AK8963 to 16 bit resolution, 100 Hz update rate
+	if (writeAK8963Register(AK8963_CNTL1, AK8963_CNT_MEAS2) < 0) {
+		return -3;
+	}
+
+
+
 
 	// set accel scale (default = 16g)
 	//writeRegister(ACCEL_CONFIG, ACCEL_FS_SEL_8G);
@@ -157,24 +170,19 @@ int SimpleSPIClass::readSensor() {
 	_gx = (((int16_t)buffer[8]) << 8) | buffer[9];
 	_gy = (((int16_t)buffer[10]) << 8) | buffer[11];
 	_gz = (((int16_t)buffer[12]) << 8) | buffer[13];
-	_hxcounts = (((int16_t)buffer[15]) << 8) | buffer[14];
-	_hycounts = (((int16_t)buffer[17]) << 8) | buffer[16];
-	_hzcounts = (((int16_t)buffer[19]) << 8) | buffer[18];
+	_hx = (((int16_t)buffer[15]) << 8) | buffer[14];
+	_hy = (((int16_t)buffer[17]) << 8) | buffer[16];
+	_hz = (((int16_t)buffer[19]) << 8) | buffer[18];
 
 	// transform and convert to float values
-	_hx = (((float)(_hxcounts)*_magScaleX) - _hxb) * _hxs;
-	_hy = (((float)(_hycounts)*_magScaleY) - _hyb) * _hys;
-	_hz = (((float)(_hzcounts)*_magScaleZ) - _hzb) * _hzs;
+
 	_t = ((((float)_tcounts) - _tempOffset) / _tempScale) + _tempOffset;
 
 	return 0;
 }
 
-// Maybe should change the gyro sample rate
-// Should get the drift and adjust the angle by that every time we update it or every couple of times we update it
-// Set gyro offset
 
-// Set gyro offset every now and then (after noticeable difference)
+// Should get the drift and adjust the angle by that every time we update it or every couple of times we update it
 // based on the average gravity and magnetic 
 // field felt by the sensor over the previous period of time
 float SimpleSPIClass::returnVar()
@@ -182,7 +190,7 @@ float SimpleSPIClass::returnVar()
 
 	readSensor();
 	xAng += ((float)_gx / 500) - xAngDrift;
-	return (float) xAng;
+	return _tcounts;
 
 }
 
@@ -263,4 +271,56 @@ int SimpleSPIClass::whoAmI() {
 	}
 	// return the register value
 	return buffer[0];
+}
+
+
+
+/* writes a register to the AK8963 given a register address and data */
+int SimpleSPIClass::writeAK8963Register(uint8_t subAddress, uint8_t data) {
+	// set slave 0 to the AK8963 and set for write
+	if (writeRegister(I2C_SLV0_ADDR, AK8963_I2C_ADDR) < 0) {
+		return -1;
+	}
+	// set the register to the desired AK8963 sub address 
+	if (writeRegister(I2C_SLV0_REG, subAddress) < 0) {
+		return -2;
+	}
+	// store the data for write
+	if (writeRegister(I2C_SLV0_DO, data) < 0) {
+		return -3;
+	}
+	// enable I2C and send 1 byte
+	if (writeRegister(I2C_SLV0_CTRL, I2C_SLV0_EN | (uint8_t)1) < 0) {
+		return -4;
+	}
+	// read the register and confirm
+	if (readAK8963Registers(subAddress, 1, buffer) < 0) {
+		return -5;
+	}
+	if (buffer[0] == data) {
+		return 1;
+	}
+	else {
+		return -6;
+	}
+}
+
+/* reads registers from the AK8963 */
+int SimpleSPIClass::readAK8963Registers(uint8_t subAddress, uint8_t count, uint8_t* dest) {
+	// set slave 0 to the AK8963 and set for read
+	if (writeRegister(I2C_SLV0_ADDR, AK8963_I2C_ADDR | I2C_READ_FLAG) < 0) {
+		return -1;
+	}
+	// set the register to the desired AK8963 sub address
+	if (writeRegister(I2C_SLV0_REG, subAddress) < 0) {
+		return -2;
+	}
+	// enable I2C and request the bytes
+	if (writeRegister(I2C_SLV0_CTRL, I2C_SLV0_EN | count) < 0) {
+		return -3;
+	}
+	delay(1); // takes some time for these registers to fill
+  // read the bytes off the MPU9250 EXT_SENS_DATA registers
+	int _status = readRegisters(EXT_SENS_DATA_00, count, dest);
+	return _status;
 }

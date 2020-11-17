@@ -150,6 +150,22 @@ class SimpleSPIClass {
     float zAngDrift;
 
 
+    // Constants for reading from AK8963
+    const uint8_t I2C_SLV0_ADDR = 0x25;
+    const uint8_t I2C_SLV0_REG = 0x26;
+    const uint8_t I2C_SLV0_DO = 0x63;
+    const uint8_t I2C_SLV0_CTRL = 0x27;
+    const uint8_t I2C_SLV0_EN = 0x80;
+    const uint8_t I2C_READ_FLAG = 0x80;
+
+    const uint8_t AK8963_I2C_ADDR = 0x0C;
+    const uint8_t AK8963_CNTL1 = 0x0A;
+    const uint8_t AK8963_PWR_DOWN = 0x00;
+    const uint8_t AK8963_CNT_MEAS1 = 0x12;
+    const uint8_t AK8963_CNT_MEAS2 = 0x16;
+
+    const uint8_t EXT_SENS_DATA_00 = 0x49;
+
 
 public:
 	int begin();
@@ -253,7 +269,8 @@ protected:
     void setG();
     void setSampleRate(int sampleRate);
     void setGyroDrift();
-
+    int writeAK8963Register(uint8_t subAddress, uint8_t data);
+    int readAK8963Registers(uint8_t subAddress, uint8_t count, uint8_t* dest);
    
     enum GyroRange
     {
