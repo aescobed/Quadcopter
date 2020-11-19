@@ -81,10 +81,18 @@ int SimpleSPIClass::begin()
 	initialized++; // reference count
 	SREG = sreg;
 
+	// set AK8963 to Power Down
+	if (writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN) < 0) {
+		return -15;
+	}
+
 	// check the WHO AM I byte, expected value is 0x71 (decimal 113) or 0x73 (decimal 115)
 	if ((whoAmI() != 113) && (whoAmI() != 115)) {
 		return 0;
 	}
+
+	// set AK8963 to Power Down
+	writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN);
 
 	// reset the MPU9250
 	writeRegister(PWR_MGMNT_1, PWR_RESET);
@@ -92,21 +100,50 @@ int SimpleSPIClass::begin()
 	// wait for MPU-9250 to come back up
 	delay(5);
 
-	// set accelerometer to low power mode
-	//writeRegister(PWR_MGMNT_1, 0x09);
+	// reset the AK8963
+	writeAK8963Register(AK8963_CNTL2, AK8963_RESET);
+
+	// select clock source to gyro
+	if (writeRegister(PWR_MGMNT_1, CLOCK_SEL_PLL) < 0) {
+		return -4;
+	}
+
+	// enable accelerometer and gyro
+	if (writeRegister(PWR_MGMNT_2, SEN_ENABLE) < 0) {
+		return -6;
+	}
+
+	if (whoAmIAK8963() != 72) {
+		return -14;
+	}
+
 
 	// set AK8963 to Power Down
 	if (writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN) < 0) {
-		return -2;
+		return -4;
+	}
+
+
+	// set accelerometer to low power mode
+	//writeRegister(PWR_MGMNT_1, 0x09);
+
+
+	delay(500); // long wait between AK8963 mode changes  
+
+	// set AK8963 to FUSE ROM access
+	if (writeAK8963Register(AK8963_CNTL1, AK8963_FUSE_ROM) < 0) {
+		return -16;
+	}
+
+	// set AK8963 to Power Down
+	if (writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN) < 0) {
+		return -17;
 	}
 	delay(100); // long wait between AK8963 mode changes  
 	// set AK8963 to 16 bit resolution, 100 Hz update rate
 	if (writeAK8963Register(AK8963_CNTL1, AK8963_CNT_MEAS2) < 0) {
-		return -3;
+		return -18;
 	}
-
-
-
 
 	// set accel scale (default = 16g)
 	//writeRegister(ACCEL_CONFIG, ACCEL_FS_SEL_8G);
@@ -175,6 +212,7 @@ int SimpleSPIClass::readSensor() {
 	_hz = (((int16_t)buffer[19]) << 8) | buffer[18];
 
 	// transform and convert to float values
+	xAng += ((float)_gx / 500) - xAngDrift;
 
 	_t = ((((float)_tcounts) - _tempOffset) / _tempScale) + _tempOffset;
 
@@ -189,8 +227,8 @@ float SimpleSPIClass::returnVar()
 {
 
 	readSensor();
-	xAng += ((float)_gx / 500) - xAngDrift;
-	return _tcounts;
+	
+	return _hx;
 
 }
 
@@ -267,6 +305,16 @@ void SimpleSPIClass::setGyroDrift()
 int SimpleSPIClass::whoAmI() {
 	// read the WHO AM I register
 	if (readRegisters(WHO_AM_I, 1, buffer) < 0) {
+		return -1;
+	}
+	// return the register value
+	return buffer[0];
+}
+
+/* gets the AK8963 WHO_AM_I register value, expected to be 0x48 */
+int SimpleSPIClass::whoAmIAK8963() {
+	// read the WHO AM I register
+	if (readAK8963Registers(AK8963_WHO_AM_I, 1, buffer) < 0) {
 		return -1;
 	}
 	// return the register value

@@ -125,9 +125,13 @@ class SimpleSPIClass {
     const uint8_t WHO_AM_I = 0x75;
     const uint8_t ACCEL_CONFIG = 0x1C;
     const uint8_t SMPDIV = 0x19;
+    const uint8_t PWR_MGMNT_2 = 0x6C;
 
     // Accelerometer on low power mode
     static const uint8_t PWR_CYCLE = 0x20;
+
+    const uint8_t CLOCK_SEL_PLL = 0x01;
+    const uint8_t SEN_ENABLE = 0x00;
 
     // Reset MPU 9250
     const uint8_t PWR_RESET = 0x80;
@@ -160,9 +164,13 @@ class SimpleSPIClass {
 
     const uint8_t AK8963_I2C_ADDR = 0x0C;
     const uint8_t AK8963_CNTL1 = 0x0A;
+    const uint8_t AK8963_CNTL2 = 0x0B;
     const uint8_t AK8963_PWR_DOWN = 0x00;
+    const uint8_t AK8963_RESET = 0x01;
     const uint8_t AK8963_CNT_MEAS1 = 0x12;
     const uint8_t AK8963_CNT_MEAS2 = 0x16;
+    const uint8_t AK8963_WHO_AM_I = 0x00;
+    const uint8_t AK8963_FUSE_ROM = 0x0F;
 
     const uint8_t EXT_SENS_DATA_00 = 0x49;
 
@@ -266,6 +274,7 @@ public:
 protected:
     
     int whoAmI();
+    int whoAmIAK8963();
     void setG();
     void setSampleRate(int sampleRate);
     void setGyroDrift();
