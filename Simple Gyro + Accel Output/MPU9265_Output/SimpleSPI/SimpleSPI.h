@@ -174,6 +174,10 @@ class SimpleSPIClass {
 
     const uint8_t EXT_SENS_DATA_00 = 0x49;
 
+    // Interrupt
+    const uint8_t INT_PIN_CFG = 0x37;
+    const uint8_t INT_PULSE_50US = 0x22;
+
 
 public:
 	int begin();
@@ -267,12 +271,15 @@ public:
         return SPDR;
     }
 
+
+
+protected:
+    
+
     int writeRegister(uint8_t subAddress, uint8_t data);
     int readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest);
     int readSensor();
 
-protected:
-    
     int whoAmI();
     int whoAmIAK8963();
     void setG();
@@ -281,29 +288,8 @@ protected:
     int writeAK8963Register(uint8_t subAddress, uint8_t data);
     int readAK8963Registers(uint8_t subAddress, uint8_t count, uint8_t* dest);
    
-    enum GyroRange
-    {
-        GYRO_RANGE_250DPS,
-        GYRO_RANGE_500DPS,
-        GYRO_RANGE_1000DPS,
-        GYRO_RANGE_2000DPS
-    };
-    enum AccelRange
-    {
-        ACCEL_RANGE_2G,
-        ACCEL_RANGE_4G,
-        ACCEL_RANGE_8G,
-        ACCEL_RANGE_16G
-    };
-    enum DlpfBandwidth
-    {
-        DLPF_BANDWIDTH_184HZ,
-        DLPF_BANDWIDTH_92HZ,
-        DLPF_BANDWIDTH_41HZ,
-        DLPF_BANDWIDTH_20HZ,
-        DLPF_BANDWIDTH_10HZ,
-        DLPF_BANDWIDTH_5HZ
-    };
+    // use lowspeed reading registers
+    bool useSPIHS;
 
     // buffer for sensor data
     uint8_t buffer[21];
@@ -328,7 +314,7 @@ protected:
 
     // configuration
 
-    DlpfBandwidth _bandwidth;
+
     uint8_t _srd;
     // gyro bias estimation
 

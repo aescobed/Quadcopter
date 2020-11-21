@@ -60,7 +60,7 @@ int SimpleSPIClass::initialize()
 	// http://code.google.com/p/arduino/issues/detail?id=888
 	pinMode(SCK, OUTPUT);
 
-	// Might not need MOSI (digital 11)
+	// MOSI digital 11
 	pinMode(MOSI, OUTPUT);
 
 }
@@ -81,9 +81,17 @@ int SimpleSPIClass::begin()
 	initialized++; // reference count
 	SREG = sreg;
 
+	useSPIHS = false;
+
+	// Atach interrrupt
+	if (writeRegister(INT_PIN_CFG, INT_PULSE_50US) < 0) {
+		return -12;
+	}
+
+
 	// set AK8963 to Power Down
 	if (writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN) < 0) {
-		return -15;
+		return writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN);
 	}
 
 	// check the WHO AM I byte, expected value is 0x71 (decimal 113) or 0x73 (decimal 115)
@@ -161,15 +169,28 @@ int SimpleSPIClass::begin()
 }
 
 
+
+
+// Write to register using SPI
 int SimpleSPIClass::writeRegister(uint8_t subAddress, uint8_t data) {
 	/* write data to device */
-		beginTransaction(SPISettings(LS_CLOCK, MSBFIRST, SPI_MODE3)); // begin the transaction
-		digitalWrite(SSPin, LOW); // select the MPU9250 chip
-		transfer(subAddress); // write the register address
-		transfer(data); // write the data
-		digitalWrite(SSPin, HIGH); // deselect the MPU9250 chip
-		endTransaction(); // end the transaction
+	beginTransaction(SPISettings(LS_CLOCK, MSBFIRST, SPI_MODE3)); // begin the transaction
+	digitalWrite(SSPin, LOW); // select the MPU9250 chip
+	transfer(subAddress); // write the register address
+	transfer(data); // write the data
+	digitalWrite(SSPin, HIGH); // deselect the MPU9250 chip
+	endTransaction(); // end the transaction
+
+	/* read back the register */
+	readRegisters(subAddress, 1, buffer);
+	/* check the read back register against the written register */
+	if (buffer[0] == data) {
+		return 1;
 	}
+	else {
+		return -1;
+	}
+}
 
 
 int SimpleSPIClass::readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest) {
@@ -177,7 +198,10 @@ int SimpleSPIClass::readRegisters(uint8_t subAddress, uint8_t count, uint8_t* de
 		interruptMode = 0;
 
 		// begin the transaction
-		beginTransaction(SPISettings(HS_CLOCK, MSBFIRST, SPI_MODE3));
+		if(useSPIHS)
+			beginTransaction(SPISettings(HS_CLOCK, MSBFIRST, SPI_MODE3));
+		else
+			beginTransaction(SPISettings(LS_CLOCK, MSBFIRST, SPI_MODE3));
 
 		digitalWrite(SSPin, LOW); // select the MPU9250 chip
 		transfer(subAddress | SPI_READ); // specify the starting register address
@@ -203,7 +227,7 @@ int SimpleSPIClass::readSensor() {
 	_ax = (((int16_t)buffer[0]) << 8) | buffer[1];
 	_ay= (((int16_t)buffer[2]) << 8) | buffer[3];
 	_az= (((int16_t)buffer[4]) << 8) | buffer[5];
-	_tcounts = (((int16_t)buffer[6]) << 8) | buffer[7];
+	//_tcounts = (((int16_t)buffer[6]) << 8) | buffer[7];
 	_gx = (((int16_t)buffer[8]) << 8) | buffer[9];
 	_gy = (((int16_t)buffer[10]) << 8) | buffer[11];
 	_gz = (((int16_t)buffer[12]) << 8) | buffer[13];
@@ -214,7 +238,7 @@ int SimpleSPIClass::readSensor() {
 	// transform and convert to float values
 	xAng += ((float)_gx / 500) - xAngDrift;
 
-	_t = ((((float)_tcounts) - _tempOffset) / _tempScale) + _tempOffset;
+	//_t = ((((float)_tcounts) - _tempOffset) / _tempScale) + _tempOffset;
 
 	return 0;
 }
