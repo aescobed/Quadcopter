@@ -177,7 +177,8 @@ class SimpleSPIClass {
     // Interrupt
     const uint8_t INT_PIN_CFG = 0x37;
     const uint8_t INT_PULSE_50US = 0x22;
-
+    const uint8_t INT_ENABLE = 0x38;
+    const uint8_t INT_RAW_RDY_EN = 0x01;
 
 public:
 	int begin();

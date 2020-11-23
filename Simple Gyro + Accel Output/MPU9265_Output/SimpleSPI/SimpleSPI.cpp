@@ -83,15 +83,22 @@ int SimpleSPIClass::begin()
 
 	useSPIHS = false;
 
-	// Atach interrrupt
+	
+
+	// Attach interrrupt
 	if (writeRegister(INT_PIN_CFG, INT_PULSE_50US) < 0) {
 		return -12;
 	}
 
+	if (writeRegister(INT_ENABLE, INT_RAW_RDY_EN) < 0) { // set to data ready
+		return -2;
+	}
+
+	/*
 
 	// set AK8963 to Power Down
 	if (writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN) < 0) {
-		return writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN);
+		return -11;
 	}
 
 	// check the WHO AM I byte, expected value is 0x71 (decimal 113) or 0x73 (decimal 115)
@@ -101,6 +108,8 @@ int SimpleSPIClass::begin()
 
 	// set AK8963 to Power Down
 	writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN);
+
+	*/
 
 	// reset the MPU9250
 	writeRegister(PWR_MGMNT_1, PWR_RESET);
@@ -121,10 +130,10 @@ int SimpleSPIClass::begin()
 		return -6;
 	}
 
+	// expected value is 0x48 (decimal 72)
 	if (whoAmIAK8963() != 72) {
-		return -14;
+		return -2;
 	}
-
 
 	// set AK8963 to Power Down
 	if (writeAK8963Register(AK8963_CNTL1, AK8963_PWR_DOWN) < 0) {
@@ -171,49 +180,7 @@ int SimpleSPIClass::begin()
 
 
 
-// Write to register using SPI
-int SimpleSPIClass::writeRegister(uint8_t subAddress, uint8_t data) {
-	/* write data to device */
-	beginTransaction(SPISettings(LS_CLOCK, MSBFIRST, SPI_MODE3)); // begin the transaction
-	digitalWrite(SSPin, LOW); // select the MPU9250 chip
-	transfer(subAddress); // write the register address
-	transfer(data); // write the data
-	digitalWrite(SSPin, HIGH); // deselect the MPU9250 chip
-	endTransaction(); // end the transaction
 
-	/* read back the register */
-	readRegisters(subAddress, 1, buffer);
-	/* check the read back register against the written register */
-	if (buffer[0] == data) {
-		return 1;
-	}
-	else {
-		return -1;
-	}
-}
-
-
-int SimpleSPIClass::readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest) {
-
-		interruptMode = 0;
-
-		// begin the transaction
-		if(useSPIHS)
-			beginTransaction(SPISettings(HS_CLOCK, MSBFIRST, SPI_MODE3));
-		else
-			beginTransaction(SPISettings(LS_CLOCK, MSBFIRST, SPI_MODE3));
-
-		digitalWrite(SSPin, LOW); // select the MPU9250 chip
-		transfer(subAddress | SPI_READ); // specify the starting register address
-		for (uint8_t i = 0; i < count; i++) {
-			dest[i] = transfer(0x00); // read the data
-		}
-		digitalWrite(SSPin, HIGH); // deselect the MPU9250 chip
-		endTransaction(); // end the transaction
-
-		return 1;
-	
-}
 
 /* reads the most current data from MPU9250 and stores in buffer */
 int SimpleSPIClass::readSensor() {
@@ -343,6 +310,53 @@ int SimpleSPIClass::whoAmIAK8963() {
 	}
 	// return the register value
 	return buffer[0];
+}
+
+
+
+
+// Write to register using SPI
+int SimpleSPIClass::writeRegister(uint8_t subAddress, uint8_t data) {
+	/* write data to device */
+	beginTransaction(SPISettings(LS_CLOCK, MSBFIRST, SPI_MODE3)); // begin the transaction
+	digitalWrite(SSPin, LOW); // select the MPU9250 chip
+	transfer(subAddress); // write the register address
+	transfer(data); // write the data
+	digitalWrite(SSPin, HIGH); // deselect the MPU9250 chip
+	endTransaction(); // end the transaction
+
+	/* read back the register */
+	readRegisters(subAddress, 1, buffer);
+	/* check the read back register against the written register */
+	if (buffer[0] == data) {
+		return 1;
+	}
+	else {
+		return -1;
+	}
+}
+
+
+int SimpleSPIClass::readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest) {
+
+	interruptMode = 0;
+
+	// begin the transaction
+	if (useSPIHS)
+		beginTransaction(SPISettings(HS_CLOCK, MSBFIRST, SPI_MODE3));
+	else
+		beginTransaction(SPISettings(LS_CLOCK, MSBFIRST, SPI_MODE3));
+
+	digitalWrite(SSPin, LOW); // select the MPU9250 chip
+	transfer(subAddress | SPI_READ); // specify the starting register address
+	for (uint8_t i = 0; i < count; i++) {
+		dest[i] = transfer(0x00); // read the data
+	}
+	digitalWrite(SSPin, HIGH); // deselect the MPU9250 chip
+	endTransaction(); // end the transaction
+
+	return 1;
+
 }
 
 

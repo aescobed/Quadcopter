@@ -1,14 +1,10 @@
-Set gyro offset registers
-
-Get magnetometer to work (set proper power mode)? - ak8963 Register
-
-Get gravity unit vector
-
-get magnetometer unit vector
-
 should i be setting the MPU registers with SPI? 
 	Need to set the AK registers with I2C anyways.
 		Should i set the MPU registers with MPI then treat the AK as a slave to the MPU and interact with it using I2C from the MPU
 		OR
 		Should I communicate with both the MPU9250 and AK using I2C
 			Either just for setting the registers or also for reading values
+
+
+The MPU9250 never switches to I2C if initialized with SPI
+	_useSPI never set to false	
