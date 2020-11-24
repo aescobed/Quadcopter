@@ -110,8 +110,34 @@ private:
 
     uint8_t spcr;
     uint8_t spsr;
+    
     friend class SimpleSPIClass;
+
 };
+
+
+
+#define BUFFER_LENGTH 32
+
+class SimpleI2CClass {
+
+
+private:
+
+    static uint8_t txAddress;
+    static uint8_t txBuffer[];
+    static uint8_t txBufferIndex;
+    static uint8_t txBufferLength;
+
+
+    const uint8_t AK8963_I2C_ADDR = 0x0C;
+
+
+    int writeByte(uint8_t address, uint8_t data);
+
+};
+
+
 
 
 
@@ -162,6 +188,7 @@ class SimpleSPIClass {
     const uint8_t I2C_SLV0_EN = 0x80;
     const uint8_t I2C_READ_FLAG = 0x80;
 
+    // AK8963 registers
     const uint8_t AK8963_I2C_ADDR = 0x0C;
     const uint8_t AK8963_CNTL1 = 0x0A;
     const uint8_t AK8963_CNTL2 = 0x0B;
@@ -340,7 +367,10 @@ private:
     static uint8_t interruptMask; // which interrupts to mask
     static uint8_t interruptSave; // temp storage, to restore state
 
+    friend class SimpleI2CClass;
 };
 
 extern SimpleSPIClass spi;
+
+
 

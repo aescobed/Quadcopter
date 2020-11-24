@@ -63,6 +63,7 @@ int SimpleSPIClass::initialize()
 
 	// MOSI digital 11
 	pinMode(MOSI, OUTPUT);
+	
 
 }
 
@@ -360,6 +361,46 @@ int SimpleSPIClass::readRegisters(uint8_t subAddress, uint8_t count, uint8_t* de
 
 }
 
+
+int SimpleI2CClass::writeByte(uint8_t address, uint8_t data) {
+
+
+	txAddress = AK8963_I2C_ADDR;
+
+	// reset tx buffer iterator vars
+	txBufferIndex = 0;
+	txBufferLength = 0;
+	
+	// in master transmitter mode
+  // don't bother if buffer is full
+	if (txBufferLength >= BUFFER_LENGTH) {
+		return 0;
+	}
+	// put byte in tx buffer
+	txBuffer[txBufferIndex] = address;
+	++txBufferIndex;
+	// update amount in buffer   
+	txBufferLength = txBufferIndex;
+
+	// don't bother if buffer is full
+	if (txBufferLength >= BUFFER_LENGTH) {
+		return 0;
+	}
+	// put byte in tx buffer
+	txBuffer[txBufferIndex] = data;
+	++txBufferIndex;
+	// update amount in buffer   
+	txBufferLength = txBufferIndex;
+
+	// transmit buffer (blocking)
+	uint8_t ret = twi_writeTo(txAddress, txBuffer, txBufferLength, 1, true);
+	// reset tx buffer iterator vars
+	txBufferIndex = 0;
+	txBufferLength = 0;
+
+	return ret;
+
+}
 
 
 /* writes a register to the AK8963 given a register address and data */
