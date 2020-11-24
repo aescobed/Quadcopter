@@ -1,4 +1,5 @@
 #include "SimpleSPI.h"
+#include "utils/twi.h"
 #include <math.h>
 
 
